@@ -50,12 +50,13 @@ struct elfReader {
         // program header table
     }
 
-    static func checkMagic(bytes: Data) -> String throws {
+    static func checkMagic(bytes: Data) throws -> String {
 
-        guard let hex = bytes[0x00...0x03].asHex(), hex == magicBytes else {
+        guard bytes[0x00...0x03].asHex() == magicBytes else {
             throw parseError.notELF
         }
-        return hex
+        // to match the "magic" output of eu-readelf -h
+        return bytes[0x00..<0x10].asHex().separate()
     }
 
     static func elfVersion(bytes: Data) throws -> UInt8 {
